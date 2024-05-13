@@ -9,6 +9,12 @@
 #include<QJsonDocument>
 #include<QJsonObject>
 #include<QJsonArray>
+#include"weathertool.h"
+#include<QPainter>
+#define INCREMENT 3
+#define POINT_RADIUS 3
+#define TEXT_OFFSET_X 12
+#define TEXT_OFFSET_Y 12
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -41,10 +47,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mNetAccessManager,&QNetworkAccessManager::finished,this,&MainWindow::onReplied);
     
     //直接在构造中，请求天气数据
-    getWeatherInfo("101010100");
+    getWeatherInfo(QString("北京"));
+
+    ui->lblHighCurve->installEventFilter(this);
+    ui->lblLowCurve->installEventFilter(this);
+
 }
 
-MainWindow::~MainWindow(){delete ui;}
+MainWindow::~MainWindow(){
+    delete ui;
+}
 //重写父类的虚函数
 void MainWindow::contextMenuEvent(QContextMenuEvent *event){
     mExitMenu->exec(QCursor::pos());
@@ -56,9 +68,16 @@ void MainWindow::mousePressEvent(QMouseEvent *event){
 void MainWindow::mouseMoveEvent(QMouseEvent *event){
     this->move(event->globalPos()-mOffset);
 }
-void MainWindow:: getWeatherInfo(QString cityCode){
+void MainWindow:: getWeatherInfo(QString cityName){
+    QString cityCode=WeatherTool::getCityCode(cityName);
+    if(cityCode.isEmpty()){
+        QMessageBox::warning(this,"天气","请检查输入是否正确！", QMessageBox::Ok);
+        return;
+    }
+     qDebug()<<cityCode;
     QUrl url("http://t.weather.itboy.net/api/weather/city/"+cityCode);
     mNetAccessManager->get(QNetworkRequest(url));
+    qDebug()<<url.toString();
 }
 
 void MainWindow:: parseJson(QByteArray &byteArray){
@@ -84,10 +103,10 @@ void MainWindow:: parseJson(QByteArray &byteArray){
 
     //获取高温和低温
     QString s;
-    s=objYesterday.value("high").toString().split(" ").at(1);
+    s=objYesterday.value("high").toString().split("").at(0);
     mDay[0].high= s.left(s.length()-1).toInt();
 
-    s=objYesterday.value("low").toString().split(" ").at(1);
+    s=objYesterday.value("low").toString().split("").at(0);
     mDay[0].low=s.left(s.length()-1).toInt();
 
 //解析风向和风力
@@ -107,6 +126,7 @@ void MainWindow:: parseJson(QByteArray &byteArray){
 
         QString s;
         s=objForecast.value("high").toString().split(" ").at(1);
+        qDebug() << objForecast.value("high").toString("").split(" ").at(1);
         mDay[i+1].high=s.left(s.length()-1).toInt();
 
         s=objForecast.value("low").toString().split(" ").at(1);
@@ -134,6 +154,9 @@ void MainWindow:: parseJson(QByteArray &byteArray){
     mToday.low=mDay[1].low;
 
        updateUi();
+    ui->lblHighCurve->update();
+    ui->lblLowCurve->update();
+
 }
 void MainWindow::updateUi(){
     ui->lblDate->setText(QDateTime::fromString(mToday.date,"yyyyMMdd").toString("yyyy/MM/dd")+" "+mDay[1].week);
@@ -143,6 +166,7 @@ void MainWindow::updateUi(){
     ui->lbltemp->setText(mToday.wendu);
     ui->lbltype->setText(mToday.type);
     // ui->lbllowhigh->setText(QString::number(mToday.low)+"~"+QString::number(mToday.high)+"°C");
+    qDebug() << mToday.low;
     QString range = "°C";
     range = QString::asprintf("%d ~ %d°C", mToday.low, mToday.high);
     ui->lbllowhigh->setText(range);
@@ -190,6 +214,103 @@ void MainWindow::updateUi(){
     }
 
 }
+
+bool MainWindow::eventFilter(QObject*watched,QEvent*event){
+    if(watched==ui->lblHighCurve&&event->type()==QEvent::Paint){
+        paintHighCurve();
+    }
+    if(watched==ui->lblLowCurve&&event->type()==QEvent::Paint){
+        paintLowCurve();
+    }
+    return QWidget::eventFilter(watched,event);
+
+}
+void MainWindow::paintHighCurve(){
+    QPainter painter(ui->lblHighCurve);
+    painter.setRenderHint(QPainter::Antialiasing,true);
+
+    int pointX[6]={0};
+    for(int i=0;i<6;i++){
+        pointX[i]=mWeekList[i]->pos().x()+mWeekList[i]->width()/2;
+        int tempSum=0;
+        int tempAverage=0;
+        for(int i=0;i<6;i++){
+            tempSum +=mDay[i].high;
+        }
+        tempAverage=tempSum /6;
+
+        int pointY[6]={0};
+        int yCenter=ui->lblHighCurve->height()/2;
+        for(int i=0;i<6;i++){
+            pointY[i]=yCenter - ((mDay[i].high-tempAverage) * INCREMENT);
+        }
+        QPen pen=painter.pen();
+        pen.setWidth(1);
+        pen.setColor(QColor(255,170,0));
+
+        painter.setPen(pen);
+        painter.setBrush(QColor(255,170,0));
+        for(int i=0;i<6;i++){
+            painter.drawEllipse(QPoint(pointX[i],pointY[i]),POINT_RADIUS,POINT_RADIUS);
+            painter.drawText(pointX[i]-TEXT_OFFSET_X,pointY[i]-TEXT_OFFSET_Y,QString::number(mDay[i].high)+"°");
+        }
+        for(int i=0;i<5;i++)   {
+            if(i==0){
+                pen.setStyle(Qt::DotLine);
+                painter.setPen(pen);
+            }  else{
+                pen.setStyle(Qt::SolidLine);
+                painter.setPen(pen);
+            }
+            painter.drawLine(pointX[i],pointY[i],pointX[i+1],pointY[i+1]);
+
+        }
+
+    }
+}
+void MainWindow::paintLowCurve(){
+    QPainter painter(ui->lblLowCurve);
+    painter.setRenderHint(QPainter::Antialiasing,true);
+
+    int pointX[6]={0};
+    for(int i=0;i<6;i++){
+        pointX[i]=mWeekList[i]->pos().x()+mWeekList[i]->width()/2;
+        int tempSum=0;
+        int tempAverage=0;
+        for(int i=0;i<6;i++){
+            tempSum +=mDay[i].low;
+        }
+        tempAverage=tempSum /6;
+
+        int pointY[6]={0};
+        int yCenter=ui->lblLowCurve->height()/2;
+        for(int i=0;i<6;i++){
+            pointY[i]=yCenter - ((mDay[i].low-tempAverage) * INCREMENT);
+        }
+        QPen pen=painter.pen();
+        pen.setWidth(1);
+        pen.setColor(QColor(0,255,255));
+
+        painter.setPen(pen);
+        painter.setBrush(QColor(0,255,255));
+        for(int i=0;i<6;i++){
+            painter.drawEllipse(QPoint(pointX[i],pointY[i]),POINT_RADIUS,POINT_RADIUS);
+            painter.drawText(pointX[i]-TEXT_OFFSET_X,pointY[i]-TEXT_OFFSET_Y,QString::number(mDay[i].low)+"°");
+        }
+        for(int i=0;i<5;i++)   {
+            if(i==0){
+                pen.setStyle(Qt::DotLine);
+                painter.setPen(pen);
+            }  else{
+                pen.setStyle(Qt::SolidLine);
+                painter.setPen(pen);
+            }
+            painter.drawLine(pointX[i],pointY[i],pointX[i+1],pointY[i+1]);
+
+        }
+
+    }
+}
 void MainWindow::onReplied(QNetworkReply* reply){
     int status_code= reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     //qDebug()<<"operation"<<reply->operation();
@@ -206,3 +327,10 @@ void MainWindow::onReplied(QNetworkReply* reply){
     }
     reply->deleteLater();
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+    QString cityName=ui->leCity->text();
+    getWeatherInfo(cityName);
+}
+

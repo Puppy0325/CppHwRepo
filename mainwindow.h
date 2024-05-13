@@ -7,6 +7,7 @@
 #include<QNetworkAccessManager>
 #include<QNetworkReply>
 #include"weatherdata.h"
+// #include "weathertool.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -53,5 +54,10 @@ protected:
      void getWeatherInfo(QString cityCode);
     void  parseJson(QByteArray& byteArray);
      void updateUi();
+    bool eventFilter(QObject*watched,QEvent*event);
+     void paintHighCurve();
+    void paintLowCurve();
+private slots:
+    void on_pushButton_clicked();
 };
 #endif // MAINWINDOW_H

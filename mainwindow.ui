@@ -13,7 +13,19 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#QMainWindow{border-image: url(:/res/background.jpg);}
+QLabel{
+font:25 10pt&quot;微软雅黑&quot;;
+border-radius:4pc;
+background-color:rgba(60,60,60,100);
+color:rgb(255,255,255);
+}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
@@ -43,8 +55,8 @@
    <widget class="QLabel" name="lblFx">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>311</y>
+      <x>40</x>
+      <y>310</y>
       <width>81</width>
       <height>16</height>
      </rect>
@@ -69,10 +81,10 @@
    <widget class="QLabel" name="lblcity">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>200</x>
       <y>60</y>
-      <width>49</width>
-      <height>14</height>
+      <width>111</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
@@ -95,8 +107,8 @@
    <widget class="QLabel" name="lblshidu">
     <property name="geometry">
      <rect>
-      <x>11</x>
-      <y>358</y>
+      <x>40</x>
+      <y>360</y>
       <width>49</width>
       <height>16</height>
      </rect>
@@ -105,13 +117,13 @@
      <string>TextLabel</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_8">
+   <widget class="QLabel" name="lblHighCurve">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>260</y>
-      <width>49</width>
-      <height>31</height>
+      <x>380</x>
+      <y>220</y>
+      <width>331</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
@@ -511,10 +523,10 @@
    <widget class="QLabel" name="lblDate">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>40</y>
-      <width>49</width>
-      <height>14</height>
+      <x>520</x>
+      <y>30</y>
+      <width>211</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
@@ -537,8 +549,8 @@
    <widget class="QLabel" name="lbltype">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>80</y>
+      <x>60</x>
+      <y>90</y>
       <width>49</width>
       <height>14</height>
      </rect>
@@ -550,8 +562,8 @@
    <widget class="QLabel" name="lbllowhigh">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>80</y>
+      <x>120</x>
+      <y>90</y>
       <width>151</width>
       <height>16</height>
      </rect>
@@ -564,8 +576,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>270</y>
-      <width>281</width>
+      <y>280</y>
+      <width>361</width>
       <height>16</height>
      </rect>
     </property>
@@ -576,7 +588,7 @@
    <widget class="QLabel" name="lblFl">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>40</x>
       <y>330</y>
       <width>81</width>
       <height>16</height>
@@ -586,7 +598,30 @@
      <string>TextLabel</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QLineEdit" name="leCity">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>113</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblLowCurve">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>283</y>
+      <width>331</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>290</x>
@@ -612,7 +647,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>360</x>
@@ -638,7 +673,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>490</x>
@@ -664,7 +699,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>560</x>
@@ -690,7 +725,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>641</x>
@@ -716,7 +751,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>420</x>
@@ -754,6 +789,17 @@
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
  </widget>
  <resources/>
  <connections/>
