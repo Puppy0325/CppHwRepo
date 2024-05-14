@@ -6,6 +6,7 @@
 #include<QMouseEvent>
 #include<QNetworkAccessManager>
 #include<QNetworkReply>
+#include <QPixmap>
 #include"weatherdata.h"
 // #include "weathertool.h"
 
@@ -47,15 +48,16 @@ private:
 
 
 protected:
-     void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event);
     void mousePressEvent(QMouseEvent *event);
-     void mouseMoveEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
     void onReplied(QNetworkReply* reply);
-     void getWeatherInfo(QString cityCode);
+    void getWeatherInfo(QString cityCode);
     void  parseJson(QByteArray& byteArray);
-     void updateUi();
+    QPixmap setStatusPixmap2QLabel(QString s, QLabel* l);
+    void updateUi();
     bool eventFilter(QObject*watched,QEvent*event);
-     void paintHighCurve();
+    void paintHighCurve();
     void paintLowCurve();
 private slots:
     void on_pushButton_clicked();

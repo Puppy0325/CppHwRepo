@@ -11,7 +11,8 @@
 #include<QJsonArray>
 #include"weathertool.h"
 #include<QPainter>
-#define INCREMENT 3
+// #include<QPixmap>
+#define INCREMENT 0.5
 #define POINT_RADIUS 3
 #define TEXT_OFFSET_X 12
 #define TEXT_OFFSET_Y 12
@@ -42,7 +43,11 @@ MainWindow::MainWindow(QWidget *parent)
     mfxList<<ui->lblfx0<<ui->lblfx1<<ui->lblfx2<<ui->lblfx3<<ui->lblfx4<<ui->lblfx5;
     mflList<<ui->lblfl0<<ui->lblfl1<<ui->lblfl2<<ui->lblfl3<<ui->lblfl4<<ui->lblfl5;
 
-    // mTypeMap.insert("暴雪","");
+    mTypeMap.insert("晴","D:\\Projects\\Qt\\Weatherapp\\res\\qing2.png");
+    mTypeMap.insert("多云","D:\\Projects\\Qt\\Weatherapp\\res\\duoyun2.png");
+    mTypeMap.insert("阴","D:\\Projects\\Qt\\Weatherapp\\res\\yintian2.png");
+    mTypeMap.insert("暴雪","D:\\Projects\\Qt\\Weatherapp\\res\\baoxue2.png");
+
     mNetAccessManager=new QNetworkAccessManager(this);
     connect(mNetAccessManager,&QNetworkAccessManager::finished,this,&MainWindow::onReplied);
     
@@ -74,7 +79,6 @@ void MainWindow:: getWeatherInfo(QString cityName){
         QMessageBox::warning(this,"天气","请检查输入是否正确！", QMessageBox::Ok);
         return;
     }
-     qDebug()<<cityCode;
     QUrl url("http://t.weather.itboy.net/api/weather/city/"+cityCode);
     mNetAccessManager->get(QNetworkRequest(url));
     qDebug()<<url.toString();
@@ -109,10 +113,10 @@ void MainWindow:: parseJson(QByteArray &byteArray){
     s=objYesterday.value("low").toString().split("").at(0);
     mDay[0].low=s.left(s.length()-1).toInt();
 
-//解析风向和风力
+    //解析风向和风力
     mDay[0].fx=objYesterday.value("fx").toString( );
     mDay[0].fl=objYesterday.value("fl").toString( );
-//污染指数
+    //污染指数
     mDay[0].aqi=objYesterday.value("aqi").toDouble( );
 
     //解析forecast中五天的数据
@@ -126,7 +130,7 @@ void MainWindow:: parseJson(QByteArray &byteArray){
 
         QString s;
         s=objForecast.value("high").toString().split(" ").at(1);
-        qDebug() << objForecast.value("high").toString("").split(" ").at(1);
+        // qDebug() << objForecast.value("high").toString("").split(" ").at(1);
         mDay[i+1].high=s.left(s.length()-1).toInt();
 
         s=objForecast.value("low").toString().split(" ").at(1);
@@ -158,15 +162,30 @@ void MainWindow:: parseJson(QByteArray &byteArray){
     ui->lblLowCurve->update();
 
 }
+
+QPixmap MainWindow::setStatusPixmap2QLabel(QString s, QLabel* l) {
+    QPixmap status(mTypeMap[s]);
+    l->setScaledContents(true);
+    l->setPixmap(status);
+}
+
 void MainWindow::updateUi(){
+    // qDebug() << mTypeMap[mToday.type];
+    // qDebug() << ui->lblTypeIcon->size();
+    /*
+    QPixmap status(mTypeMap[mToday.type]);
+    status.scaled(ui->lblTypeIcon->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    ui->lblTypeIcon->setScaledContents(true);
+    ui->lblTypeIcon->setPixmap(status);
+    */
+    this->setStatusPixmap2QLabel(mToday.type, ui->lblTypeIcon);
+
     ui->lblDate->setText(QDateTime::fromString(mToday.date,"yyyyMMdd").toString("yyyy/MM/dd")+" "+mDay[1].week);
     ui->lblcity->setText(mToday.city);
-
-    //ui->lblTypeIcon->setPixmap
-    ui->lbltemp->setText(mToday.wendu);
+    ui->lbltemp->setText(mToday.wendu+"°");
     ui->lbltype->setText(mToday.type);
     // ui->lbllowhigh->setText(QString::number(mToday.low)+"~"+QString::number(mToday.high)+"°C");
-    qDebug() << mToday.low;
+    // qDebug() << mToday.low;
     QString range = "°C";
     range = QString::asprintf("%d ~ %d°C", mToday.low, mToday.high);
     ui->lbllowhigh->setText(range);
@@ -180,33 +199,36 @@ void MainWindow::updateUi(){
     ui->lblquality->setText(mToday.quality);
 
     for(int i=0;i<6;i++){
-        mWeekList[i]->setText("周"+mDay[i].week.right(1));
-        ui->lblweek0->setText("昨天");
-         ui->lblweek1->setText("今天");
-         ui->lblweek2->setText("明天");
+        mWeekList[i]->setText("  周"+mDay[i].week.right(1));
+        ui->lblweek0->setText("  昨天");
+        ui->lblweek1->setText("  今天");
+        ui->lblweek2->setText("  明天");
 
-         QStringList ymdList=mDay[i].date.split("-");
-         mDateList[i]->setText(ymdList[1]+"/"+ymdList[2]);
+        QStringList ymdList=mDay[i].date.split("-");
+        mDateList[i]->setText(ymdList[1]+"/"+ymdList[2]);
 
-         mTypeList[i]->setText(mDay[i].type);
-
+        mTypeList[i]->setText(mDay[i].type);
+        // mTypeIconList[i]->setPixmap(QPixmap(mTypeMap[mDay[i].type]));
+        qDebug() << i;
+        this->setStatusPixmap2QLabel(mDay[i].type, mTypeIconList[i]);
+        qDebug() << i;
          if(mDay[i].aqi>=0&&mDay[i].aqi<=50){
-             mAqiList[i]->setText("优");
+             mAqiList[i]->setText("     优");
              mAqiList[i]->setStyleSheet("background-color:rgb(121,184,0);");
          }else  if(mDay[i].aqi>50&&mDay[i].aqi<=100){
-             mAqiList[i]->setText("良");
+             mAqiList[i]->setText("     良");
          mAqiList[i]->setStyleSheet("background-color:rgb(255,187,23);");
              }else  if(mDay[i].aqi>100&&mDay[i].aqi<=150){
-         mAqiList[i]->setText("轻度");
+         mAqiList[i]->setText("    轻度");
          mAqiList[i]->setStyleSheet("background-color:rgb(255,87,97);");
          }else  if(mDay[i].aqi>150&&mDay[i].aqi<=200){
-         mAqiList[i]->setText("中度");
+         mAqiList[i]->setText("    中度");
          mAqiList[i]->setStyleSheet("background-color:rgb(235,17,27);");
          }else  if(mDay[i].aqi>200&&mDay[i].aqi<=250){
-         mAqiList[i]->setText("重度");
+         mAqiList[i]->setText("    重度");
          mAqiList[i]->setStyleSheet("background-color:rgb(170,0,0);");
          }else {
-             mAqiList[i]->setText("严重");
+             mAqiList[i]->setText("    严重");
              mAqiList[i]->setStyleSheet("background-color:rgb(110,0,0);");
          }
          mfxList[i]->setText(mDay[i].fx);
@@ -231,7 +253,8 @@ void MainWindow::paintHighCurve(){
 
     int pointX[6]={0};
     for(int i=0;i<6;i++){
-        pointX[i]=mWeekList[i]->pos().x()+mWeekList[i]->width()/2;
+        pointX[i]=mWeekList[i]->pos().x()-10.3*mWeekList[i]->width()/2;
+    }
         int tempSum=0;
         int tempAverage=0;
         for(int i=0;i<6;i++){
@@ -267,14 +290,14 @@ void MainWindow::paintHighCurve(){
         }
 
     }
-}
 void MainWindow::paintLowCurve(){
     QPainter painter(ui->lblLowCurve);
     painter.setRenderHint(QPainter::Antialiasing,true);
 
     int pointX[6]={0};
     for(int i=0;i<6;i++){
-        pointX[i]=mWeekList[i]->pos().x()+mWeekList[i]->width()/2;
+        pointX[i]=mWeekList[i]->pos().x()-10.3*mWeekList[i]->width()/2;
+    }
         int tempSum=0;
         int tempAverage=0;
         for(int i=0;i<6;i++){
@@ -310,7 +333,6 @@ void MainWindow::paintLowCurve(){
         }
 
     }
-}
 void MainWindow::onReplied(QNetworkReply* reply){
     int status_code= reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     //qDebug()<<"operation"<<reply->operation();

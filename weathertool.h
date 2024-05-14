@@ -33,10 +33,10 @@ private:
             mCityMap.insert(city,code);
         }
         QMapIterator<QString, QString> i(mCityMap);
-        while (i.hasNext()) {
-            i.next();
-            qDebug() << i.key() << i.value();
-        }
+        // while (i.hasNext()) {
+        //     i.next();
+        //     qDebug() << i.key() << i.value();
+        // }
 
     }
 public:
