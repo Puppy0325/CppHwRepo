@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>722</width>
-    <height>443</height>
+    <width>720</width>
+    <height>446</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,7 @@ font:25 10pt&quot;微软雅黑&quot;;
      <string notr="true">color: rgb(255,255,255);</string>
     </property>
     <property name="text">
-     <string>text</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="lblFx">
@@ -58,7 +58,7 @@ font:25 10pt&quot;微软雅黑&quot;;
      <string notr="true">color: rgb(255,255,255);</string>
     </property>
     <property name="text">
-     <string>北风</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="lblcity">
@@ -74,7 +74,7 @@ font:25 10pt&quot;微软雅黑&quot;;
      <string notr="true">color: rgb(255,255,255);</string>
     </property>
     <property name="text">
-     <string>city</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="lblshidu">
@@ -90,7 +90,7 @@ font:25 10pt&quot;微软雅黑&quot;;
      <string notr="true">color: rgb(255,255,255);</string>
     </property>
     <property name="text">
-     <string>湿度</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="lblHighCurve">
@@ -441,7 +441,7 @@ color:rgb(255,255,255);</string>
      <rect>
       <x>650</x>
       <y>172</y>
-      <width>55</width>
+      <width>53</width>
       <height>16</height>
      </rect>
     </property>
@@ -680,7 +680,7 @@ color:rgb(255,255,255);</string>
 AlignHCenter;</string>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string/>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -699,7 +699,7 @@ AlignHCenter;</string>
      <string notr="true">color: rgb(255,255,255);</string>
     </property>
     <property name="text">
-     <string>temp</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="lbltype">
@@ -715,7 +715,7 @@ AlignHCenter;</string>
      <string notr="true">color: rgb(255,255,255);</string>
     </property>
     <property name="text">
-     <string>t'y'pe</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="lbllowhigh">
@@ -731,7 +731,7 @@ AlignHCenter;</string>
      <string notr="true">color: rgb(255,255,255);</string>
     </property>
     <property name="text">
-     <string>highlow</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="lblganmao">
@@ -766,7 +766,7 @@ AlignHCenter;</string>
      <string notr="true">color: rgb(255,255,255);</string>
     </property>
     <property name="text">
-     <string>三级</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="lblLowCurve">
@@ -820,7 +820,7 @@ AlignHCenter;</string>
    <widget class="QLabel" name="pm25png">
     <property name="geometry">
      <rect>
-      <x>35</x>
+      <x>40</x>
       <y>150</y>
       <width>301</width>
       <height>281</height>
@@ -862,7 +862,7 @@ AlignHCenter;</string>
      <string notr="true">color:rgb(255,255,255)</string>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
@@ -942,7 +942,7 @@ AlignHCenter;</string>
      <string notr="true"/>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string/>
     </property>
    </widget>
    <widget class="QWidget" name="layoutWidget">
@@ -1256,12 +1256,12 @@ color: rgb(255,255,255);</string>
    <zorder>qualitypng</zorder>
    <zorder>shidupng</zorder>
    <zorder>fengshanpng</zorder>
-   <zorder>lblFl</zorder>
-   <zorder>lblFx</zorder>
    <zorder>label</zorder>
-   <zorder>lblshidu</zorder>
    <zorder>label_3</zorder>
    <zorder>label_2</zorder>
+   <zorder>lblFl</zorder>
+   <zorder>lblFx</zorder>
+   <zorder>lblshidu</zorder>
    <zorder>lblquality</zorder>
    <zorder>lblpm25</zorder>
    <zorder>lblganmao</zorder>

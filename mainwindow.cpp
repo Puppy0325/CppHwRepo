@@ -28,7 +28,6 @@ MainWindow::MainWindow(QWidget *parent)
     mExitMenu=new QMenu(this);//右键退出的菜单
     mExitAct=new QAction();
     mExitAct->setText("退出");
-   // mExitAct->setIcon(QIcon(" "));//添加图标
     mExitMenu->addAction(mExitAct);
 
     connect(mExitAct,&QAction::triggered,this,[=]{
@@ -199,10 +198,10 @@ void MainWindow::updateUi(){
     ui->lblquality->setText(mToday.quality);
 
     for(int i=0;i<6;i++){
-        mWeekList[i]->setText("  周"+mDay[i].week.right(1));
-        ui->lblweek0->setText("  昨天");
-        ui->lblweek1->setText("  今天");
-        ui->lblweek2->setText("  明天");
+        mWeekList[i]->setText("周"+mDay[i].week.right(1));
+        ui->lblweek0->setText("昨天");
+        ui->lblweek1->setText("今天");
+        ui->lblweek2->setText("明天");
 
         QStringList ymdList=mDay[i].date.split("-");
         mDateList[i]->setText(ymdList[1]+"/"+ymdList[2]);
@@ -213,22 +212,22 @@ void MainWindow::updateUi(){
         this->setStatusPixmap2QLabel(mDay[i].type, mTypeIconList[i]);
         qDebug() << i;
          if(mDay[i].aqi>=0&&mDay[i].aqi<=50){
-             mAqiList[i]->setText("     优");
+             mAqiList[i]->setText("优");
              mAqiList[i]->setStyleSheet("background-color:rgb(121,184,0);");
          }else  if(mDay[i].aqi>50&&mDay[i].aqi<=100){
-             mAqiList[i]->setText("     良");
+             mAqiList[i]->setText("良");
          mAqiList[i]->setStyleSheet("background-color:rgb(255,187,23);");
              }else  if(mDay[i].aqi>100&&mDay[i].aqi<=150){
-         mAqiList[i]->setText("    轻度");
+         mAqiList[i]->setText("轻度");
          mAqiList[i]->setStyleSheet("background-color:rgb(255,87,97);");
          }else  if(mDay[i].aqi>150&&mDay[i].aqi<=200){
-         mAqiList[i]->setText("    中度");
+         mAqiList[i]->setText("中度");
          mAqiList[i]->setStyleSheet("background-color:rgb(235,17,27);");
          }else  if(mDay[i].aqi>200&&mDay[i].aqi<=250){
-         mAqiList[i]->setText("    重度");
+         mAqiList[i]->setText("重度");
          mAqiList[i]->setStyleSheet("background-color:rgb(170,0,0);");
          }else {
-             mAqiList[i]->setText("    严重");
+             mAqiList[i]->setText("严重");
              mAqiList[i]->setStyleSheet("background-color:rgb(110,0,0);");
          }
          mfxList[i]->setText(mDay[i].fx);
